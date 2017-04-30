@@ -21,8 +21,10 @@ ICPT:: ICPT          ( int argc , char ** argv , QWidget * parent )
      , CA::Thread    (                                            )
      , ui            ( new Ui::ICPT                               )
 {
-  Parse         ( argc , argv ) ;
-  ui -> setupUi ( this        ) ;
+  Parse            ( argc , argv ) ;
+  ui    -> setupUi ( this        ) ;
+  mdi    = ui -> Center            ;
+  curves = NULL                    ;
 }
 
 ICPT::~ICPT(void)
@@ -63,4 +65,19 @@ void ICPT::Start(void)
 
 void ICPT::Play(void)
 {
+}
+
+void ICPT::Scenes(void)
+{
+  curves  = new ShowCurves ( NULL     ) ;
+  mdi    -> addSubWindow   ( curves   ) ;
+  curves -> show           (          ) ;
+  curves -> setWindowTitle ( "Curves" ) ;
+  curves -> StartTime      (          ) ;
+}
+
+void ICPT::StopScenes(void)
+{
+  if ( NULL == curves ) return ;
+  curves -> StopTime ( )       ;
 }

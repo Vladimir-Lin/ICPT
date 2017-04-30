@@ -14,6 +14,7 @@ TEMPLATE     = app
 
 include ($${PWD}/CA/CA.pri)
 include ($${PWD}/System/System.pri)
+include ($${PWD}/Graphics/Graphics.pri)
 include ($${PWD}/UI/UI.pri)
 
 DEFINES     += QT_DEPRECATED_WARNINGS

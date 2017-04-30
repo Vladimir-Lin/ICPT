@@ -75,8 +75,16 @@
     <addaction name="separator"/>
     <addaction name="menuWindows"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionScenes"/>
+    <addaction name="actionStop"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuTools"/>
    <addaction name="menuWindow"/>
   </widget>
   <widget class="QToolBar" name="Tools">
@@ -115,6 +123,16 @@
     <string>Ctrl+C</string>
    </property>
   </action>
+  <action name="actionScenes">
+   <property name="text">
+    <string>Scenes</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="text">
+    <string>Stop</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -126,6 +144,38 @@
    <signal>triggered()</signal>
    <receiver>ICPT</receiver>
    <slot>Quit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionScenes</sender>
+   <signal>triggered()</signal>
+   <receiver>ICPT</receiver>
+   <slot>Scenes()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>ICPT</receiver>
+   <slot>StopScenes()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

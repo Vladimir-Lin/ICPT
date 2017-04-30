@@ -30,6 +30,11 @@ int CA::Vector::type(void) const
   return 0 ;
 }
 
+double * CA::Vector::values(void)
+{
+  return V ;
+}
+
 void CA::Vector::allocate(int items)
 {
   if ( NULL != P ) delete [ ] P ;

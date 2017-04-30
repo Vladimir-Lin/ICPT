@@ -12,6 +12,8 @@
 #include "Physics.hpp"
 #include "System.hpp"
 
+#include "ShowCurves.hpp"
+
 namespace Ui {
   class ICPT ;
 }
@@ -30,7 +32,9 @@ class ICPT : public QMainWindow
 
   protected:
 
-    Ui::ICPT * ui ;
+    Ui::ICPT   * ui     ;
+    QMdiArea   * mdi    ;
+    ShowCurves * curves ;
 
     void         Parse         (int argc,char ** argv) ;
 
@@ -41,6 +45,9 @@ class ICPT : public QMainWindow
     virtual int  Failure       (void) ;
     virtual void Quit          (void) ;
     virtual void Play          (void) ;
+
+    virtual void Scenes        (void) ;
+    virtual void StopScenes    (void) ;
 
   protected slots:
 
