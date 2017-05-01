@@ -4,13 +4,12 @@ ShowCurves:: ShowCurves       ( QWidget * parent )
            : QOpenGLWidget    (           parent )
            , QOpenGLFunctions (                  )
 {
-  double * v = V4 . values ( )                         ;
-  QObject::connect ( &TTT , SIGNAL ( timeout   ( ) )   ,
-                     this , SLOT   ( Intervals ( ) ) ) ;
-  v [ 0 ] = 15000.0                                    ;
-  v [ 1 ] = -5000.0                                    ;
-  v [ 2 ] =  5000.0                                    ;
-  v [ 3 ] =     0.0                                    ;
+  CA::Vector4 AT ( 0.0 , 0.0 , 0.0 , 0.0 )                ;
+  CA::Vector4 UP ( 0.0 , 0.0 , 1.0 , 0.0 )                ;
+  QObject::connect ( &TTT , SIGNAL ( timeout   ( ) )      ,
+                     this , SLOT   ( Intervals ( ) )    ) ;
+  V4     . setValues ( 15000.0 , -5000.0 , 5000.0 , 0.0 ) ;
+  camera . Look      ( V4      , AT , UP                ) ;
 }
 
 ShowCurves::~ShowCurves(void)
@@ -50,12 +49,14 @@ void ShowCurves::Intervals(void)
   a       /= 180                          ;
   v [ 0 ]  = 15000 * cos ( a )            ;
   v [ 1 ]  = 15000 * sin ( a )            ;
+  camera . value ( CA::Camera::EYE ) = V4 ;
   update ( )                              ;
 }
 
 void ShowCurves::initializeGL(void)
 {
-  initializeOpenGLFunctions ( ) ;
+  initializeOpenGLFunctions ( )                       ;
+  camera . Projection ( 45 , width ( ) , height ( ) ) ;
 }
 
 void ShowCurves::paintGL(void)
@@ -92,29 +93,22 @@ void ShowCurves::paintGL(void)
   double * v      = V4 . values ( )                                     ;
   factor /= h                                                           ;
   ///////////////////////////////////////////////////////////////////////
-  ::glViewport        ( 0 , 0 , w , h                                 ) ;
   ::glMatrixMode      ( GL_TEXTURE                                    ) ;
   ::glLoadIdentity    (                                               ) ;
   ///////////////////////////////////////////////////////////////////////
-  ::glMatrixMode      ( GL_PROJECTION                                 ) ;
-  ::glLoadIdentity    (                                               ) ;
-  ::gluPerspective    ( 45 , factor , 1 , 10000000000000000000.0      ) ;
-  ::glMatrixMode      ( GL_MODELVIEW                                  ) ;
-  ::glLoadIdentity    (                                               ) ;
-  ::gluLookAt         ( v [ 0 ] , v [ 1 ] ,  v [ 2 ]                    ,
-                            0.0 ,     0.0 ,      0.0                    ,
-                            0.0 ,     0.0 ,      1.0                  ) ;
-  ::glPushMatrix      (                                               ) ;
+  camera . Push       (                                               ) ;
   ///////////////////////////////////////////////////////////////////////
   DrawCurves          (                                               ) ;
   ///////////////////////////////////////////////////////////////////////
-  ::glPopMatrix       (                                               ) ;
+  camera . Pop        (                                               ) ;
+//  ::glPopMatrix       (                                               ) ;
   ::glFlush           (                                               ) ;
   ///////////////////////////////////////////////////////////////////////
 }
 
 void ShowCurves::resizeGL(int width,int height)
 {
+  camera . setRegion ( 0 , 0 , width , height ) ;
 }
 
 bool ShowCurves::bindError(void)

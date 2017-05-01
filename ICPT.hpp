@@ -9,6 +9,8 @@
 #include <QtXml>
 
 #include "Linear.hpp"
+#include "Geometry.hpp"
+#include "Catastrophe.hpp"
 #include "Physics.hpp"
 #include "System.hpp"
 

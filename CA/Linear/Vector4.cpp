@@ -7,6 +7,11 @@ CA::Vector4:: Vector4 ( void )
 {
 }
 
+CA::Vector4:: Vector4 ( double * address )
+            : Vector  (          address )
+{
+}
+
 CA::Vector4:: Vector4 ( Vector3 & v )
             : Vector  ( 4           )
 {

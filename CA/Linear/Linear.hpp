@@ -1,6 +1,11 @@
 #ifndef LINEAR_ALGEBRA_HPP
 #define LINEAR_ALGEBRA_HPP
 
+#include <float.h>
+
+#define FastCos cos
+#define FastSin sin
+
 namespace CA
 {
 
@@ -35,6 +40,7 @@ class Vector3 : public Vector
   public:
 
     explicit     Vector3     (void) ;
+    explicit     Vector3     (double * address) ;
                  Vector3     (Vector3 & v) ;
                  Vector3     (double a,double b,double c) ;
     virtual     ~Vector3     (void) ;
@@ -79,6 +85,7 @@ class Vector4 : public Vector
   public:
 
     explicit     Vector4     (void) ;
+    explicit     Vector4     (double * address) ;
                  Vector4     (Vector3 & v) ;
                  Vector4     (Vector4 & v) ;
                  Vector4     (double a,double b,double c,double d = 0) ;
@@ -119,6 +126,60 @@ Vector4 operator * (Vector4 & a,double    b) ;
 Vector4 operator / (Vector4 & a,double    b) ;
 double  operator * (Vector4 & a,Vector4 & b) ;
 Vector4 cross      (Vector4 & a,Vector4 & b) ;
+
+class Matrix4x4
+{
+  public:
+
+    explicit    Matrix4x4   (void) ;
+    virtual    ~Matrix4x4   (void) ;
+
+    double    * values      (void) ;
+
+    Matrix4x4 & zero        (void) ;
+    Matrix4x4 & identity    (void) ;
+
+    Matrix4x4 & operator *  (double v) ;
+    Matrix4x4 & operator /  (double v) ;
+
+    Matrix4x4 & operator += (Matrix4x4 & v) ;
+    Matrix4x4 & operator -= (Matrix4x4 & v) ;
+
+    Matrix4x4 & translate   (Vector4   & v) ;
+    Matrix4x4 & scale       (Vector4   & v) ;
+    Matrix4x4 & rotate      (Vector4   & v) ;
+
+    Matrix4x4   product     (Matrix4x4 & v) ;
+
+    Matrix4x4   transpose   (void) ;
+    bool        inverse     (Matrix4x4 & T,double zero = DBL_MIN * 10 ) ;
+
+  protected:
+
+    double M [ 16 ] ;
+
+  private:
+
+} ;
+
+Vector4 operator * (Matrix4x4 & a,Vector4 & b) ;
+
+class Tensor4x4
+{
+  public:
+
+    explicit Tensor4x4 (void) ;
+    virtual ~Tensor4x4 (void) ;
+
+    double * values    (void) ;
+
+  protected:
+
+    double T [ 16 ] ;
+
+  private:
+
+} ;
 
 }
 

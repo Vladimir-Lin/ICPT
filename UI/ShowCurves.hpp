@@ -15,6 +15,7 @@
 #include "Catastrophe.hpp"
 #include "Physics.hpp"
 #include "System.hpp"
+#include "Graphics.hpp"
 
 class ShowCurves : public    QOpenGLWidget
                  , protected QOpenGLFunctions
@@ -30,8 +31,9 @@ class ShowCurves : public    QOpenGLWidget
 
   protected:
 
-    QTimer      TTT ;
-    CA::Vector4 V4  ;
+    QTimer      TTT    ;
+    CA::Vector4 V4     ;
+    CA::Camera  camera ;
 
     void          initializeGL   (void) ;
     void          paintGL        (void) ;
