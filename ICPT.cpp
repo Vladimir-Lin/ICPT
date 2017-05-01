@@ -50,17 +50,45 @@ void ICPT::Quit(void)
 
 bool ICPT::Prepare(void)
 {
-  show                                       (           ) ;
-  //////////////////////////////////////////////////////////
-  QObject::connect ( this , SIGNAL ( EmitStart ( ) )       ,
-                     this , SLOT   ( Start     ( ) )     ) ;
-  emit EmitStart ( )                                       ;
-  //////////////////////////////////////////////////////////
-  return true                                              ;
+  /////////////////////////////////////////////////////////////////////
+  QObject::connect ( this , SIGNAL ( EmitStart ( ) )                  ,
+                     this , SLOT   ( Start     ( ) )                ) ;
+  /////////////////////////////////////////////////////////////////////
+  QObject::connect ( ui->menuMonitors , SIGNAL ( aboutToShow  ( ) )   ,
+                     this             , SLOT   ( ShowMonitors ( ) ) ) ;
+  /////////////////////////////////////////////////////////////////////
+  emit EmitStart ( )                                                  ;
+  /////////////////////////////////////////////////////////////////////
+  return true                                                         ;
 }
 
 void ICPT::Start(void)
 {
+  show ( ) ;
+}
+
+void ICPT::ShowMonitors(void)
+{
+  QMenu   * mm = ui   -> menuMonitors                            ;
+  int       sc = qApp -> desktop ( ) -> screenCount ( )          ;
+  QString   ss                                                   ;
+  QAction * aa                                                   ;
+  QRect     rr                                                   ;
+  ////////////////////////////////////////////////////////////////
+  mm -> clear ( )                                                ;
+  ////////////////////////////////////////////////////////////////
+  for ( int i = 0 ; i < sc ; i++ )                               {
+    rr  = qApp -> desktop ( ) -> screenGeometry ( i )            ;
+    ss  = tr ( "Screen %1 : %2 X %3 ( %4 , %5 )"                 )
+          . arg ( i                                              )
+          . arg ( rr . width  ( )                                )
+          . arg ( rr . height ( )                                )
+          . arg ( rr . left   ( )                                )
+          . arg ( rr . top    ( )                              ) ;
+    aa  = new QAction (    )                                     ;
+    aa -> setText     ( ss )                                     ;
+    mm -> addAction   ( aa )                                     ;
+  }                                                              ;
 }
 
 void ICPT::Play(void)

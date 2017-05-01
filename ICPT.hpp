@@ -55,6 +55,8 @@ class ICPT : public QMainWindow
 
   private slots:
 
+    void         ShowMonitors  (void) ;
+
   signals:
 
     void         EmitStart     (void) ;
