@@ -17,6 +17,165 @@
 #include "System.hpp"
 #include "Graphics.hpp"
 
+class MenuManager
+{
+  public:
+
+    QMenu * menu ;
+
+    explicit       MenuManager  (QWidget * widget) ;
+    virtual       ~MenuManager  (void);
+
+    QAction      * exec         (QPoint pos = QCursor::pos()) ;
+
+    QAction      * add          (int Id,QString text);
+    QAction      * add          (int Id,QIcon icon,QString text);
+    QAction      * add          (int Id,QString text,bool checkable,bool checked);
+    QAction      * add          (int Id,QIcon icon,QString text,bool checkable,bool checked);
+    QAction      * addSeparator (void) ;
+
+    QMenu        * addMenu      (QString title) ;
+    QMenu        * addMenu      (QMenu * m,QString title) ;
+    QAction      * add          (QMenu * m,int Id,QString text);
+    QAction      * add          (QMenu * m,int Id,QIcon icon,QString text);
+    QAction      * add          (QMenu * m,int Id,QString text,bool checkable,bool checked);
+    QAction      * add          (QMenu * m,int Id,QIcon icon,QString text,bool checkable,bool checked);
+    QAction      * addSeparator (QMenu * m) ;
+
+    QAction      * add          (int Id,QWidget * widget) ;
+    QAction      * add          (QMenu * m,int Id,QWidget * widget) ;
+
+    bool           contains     (QAction * action) ;
+    int            operator [ ] (QAction * action) ;
+
+    void           setFont      (QFont  font) ;
+
+    QActionGroup * group        (int Id) ;
+    int            setGroup     (int Id,QActionGroup * group) ;
+
+    QWidget      * widget       (int Id) ;
+
+  protected:
+
+    QList<QAction *                > actions      ;
+    QList<QMenu   *                > menus        ;
+    QMap <QAction *, int           > IDs          ;
+    QMap <int      , QWidget      *> Widgets      ;
+    QMap <int      , QActionGroup *> actionGroups ;
+
+  private:
+
+} ;
+
+class InteractiveEditor : public QWidget
+{
+  Q_OBJECT
+  public:
+
+    QScrollArea * scrollArea ;
+
+    explicit InteractiveEditor        (QWidget * widget) ;
+    virtual ~InteractiveEditor        (void) ;
+
+    virtual void  Join                (QScrollArea * area) ;
+    virtual void  Report              (QString message) ;
+    virtual void  Clear               (void) ;
+
+    QStringList & CommandQueue        (void) ;
+
+    bool          toFile              (QString filename,QByteArray & Body) ;
+    bool          toByteArray         (QString filename,QByteArray & Body) ;
+
+    QStringList   StringList          (QString filename,QString split) ;
+    QStringList   PurifyLines         (QStringList lines) ;
+
+  protected:
+
+    QByteArray  History       ;
+    QStringList Symbols       ;
+    QStringList Queues        ;
+    QStringList CommandList   ;
+    QString     Prompt        ;
+    QString     Commands      ;
+    QString     imString      ;
+    QString     peString      ;
+    QTimer    * cursorTimer   ;
+    QRect       PrevRect      ;
+    bool        blink         ;
+    bool        overwriteMode ;
+    bool        isToolTip     ;
+    int         charWidth     ;
+    int         charHeight    ;
+    int         cursorX       ;
+    int         cursorY       ;
+    int         Mode          ;
+    int         Verbose       ;
+    int         HistoryIndex  ;
+    LMAPs       States        ;
+
+    virtual void Configure            (void) ;
+
+    virtual void contextMenuEvent     (QContextMenuEvent  * event) ;
+    virtual void focusInEvent         (QFocusEvent        * event) ;
+    virtual void focusOutEvent        (QFocusEvent        * event) ;
+    virtual void resizeEvent          (QResizeEvent       * event) ;
+    virtual void showEvent            (QShowEvent         * event) ;
+    virtual void keyPressEvent        (QKeyEvent          * event) ;
+    virtual void mouseMoveEvent       (QMouseEvent        * event) ;
+    virtual void mousePressEvent      (QMouseEvent        * event) ;
+    virtual void paintEvent           (QPaintEvent        * event) ;
+    virtual void closeEvent           (QCloseEvent        * event) ;
+
+    virtual void inputMethodEvent     (QInputMethodEvent  * event) ;
+    virtual QVariant inputMethodQuery (Qt::InputMethodQuery query) const ;
+    virtual bool InsertIM             (QString commit,QString preedit) ;
+
+    virtual void paintCursor          (QPainter & painter) ;
+    virtual void paintContents        (QPainter & painter) ;
+
+  private:
+
+    int          cursorAt             (QString L) ;
+    bool         canDo                (QString value) ;
+    QStringList  Split                (QString command) ;
+    bool         changeFont           (void) ;
+
+  public slots:
+
+    virtual bool startCursor          (void) ;
+    virtual bool shutdown             (void) ;
+    virtual void Adjust               (void) ;
+    virtual void ensureVisible        (void) ;
+    virtual void Evaluate             (void) ;
+    virtual void Enter                (void) ;
+    virtual void Enter                (QString command) ;
+    virtual void setFont              (void) ;
+    virtual void Copy                 (void) ;
+    virtual void Paste                (void) ;
+    virtual void setPrompt            (QString prompt) ;
+    virtual void BrowseFiles          (void) ;
+    virtual void ClearCommands        (void) ;
+    virtual bool LoadCommands         (QString filename) ;
+    virtual bool SaveCommands         (QString filename) ;
+
+  protected slots:
+
+    virtual bool Menu                 (QPoint pos) ;
+
+    virtual void GoUp                 (void) ;
+    virtual void GoDown               (void) ;
+
+  private slots:
+
+    void         updateCursor         (void) ;
+
+  signals:
+
+    void         EmitUpdate           (void) ;
+    void         LineInput            (void) ;
+
+} ;
+
 class ShowCurves : public    QOpenGLWidget
                  , protected QOpenGLFunctions
                  , public    CA::Thread
@@ -56,6 +215,55 @@ class ShowCurves : public    QOpenGLWidget
   protected slots:
 
     void          DrawCurves     (void) ;
+
+  private slots:
+
+  signals:
+
+} ;
+
+class StarView : public    QOpenGLWidget
+               , protected QOpenGLFunctions
+               , public    CA::Thread
+{
+  Q_OBJECT
+  public:
+
+    explicit      StarView              (QWidget * parent = NULL) ;
+    virtual      ~StarView              (void) ;
+
+    virtual QSize sizeHint              (void) const ;
+
+  protected:
+
+    QTimer        TTT    ;
+    CA::Vector4   V4     ;
+    CA::Camera    camera ;
+
+    void          initializeGL          (void) ;
+    void          paintGL               (void) ;
+    void          resizeGL              (int width,int height) ;
+
+    virtual void  mousePressEvent       (QMouseEvent * e) ;
+    virtual void  mouseReleaseEvent     (QMouseEvent * e) ;
+    virtual void  mouseDoubleClickEvent (QMouseEvent * e) ;
+    virtual void  mouseMoveEvent        (QMouseEvent * e) ;
+
+  private:
+
+    bool          bindError             (void) ;
+    bool          BindTexture           (QImage * image,GLuint & id) ;
+    void          PushPoints            (int n,int gaps,double * points) ;
+
+  public slots:
+
+    void          StartTime             (void) ;
+    void          StopTime              (void) ;
+
+    void          FlushGL               (void) ;
+    void          Intervals             (void) ;
+
+  protected slots:
 
   private slots:
 

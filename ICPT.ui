@@ -82,12 +82,21 @@
     <addaction name="actionScenes"/>
     <addaction name="actionStop"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuWindow"/>
   </widget>
   <widget class="QToolBar" name="Tools">
+   <property name="windowTitle">
+    <string>Tools</string>
+   </property>
    <property name="iconSize">
     <size>
      <width>28</width>

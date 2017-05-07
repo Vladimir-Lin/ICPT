@@ -34,13 +34,17 @@ class ICPT : public QMainWindow
 
   protected:
 
-    Ui::ICPT   * ui     ;
-    QMdiArea   * mdi    ;
-    ShowCurves * curves ;
+    Ui::ICPT          * ui     ;
+    QMdiArea          * mdi    ;
+    QDockWidget       * dock   ;
+    InteractiveEditor * cli    ;
+    ShowCurves        * curves ;
 
     void         Parse         (int argc,char ** argv) ;
 
   private:
+
+    void CreateInterpreter     (void) ;
 
   public slots:
 

@@ -64,7 +64,25 @@ bool ICPT::Prepare(void)
 
 void ICPT::Start(void)
 {
-  show ( ) ;
+  show              ( ) ;
+  CreateInterpreter ( ) ;
+}
+
+void ICPT::CreateInterpreter(void)
+{
+  QScrollArea * sa = NULL                                    ;
+  ////////////////////////////////////////////////////////////
+  dock  = new QDockWidget       (                          ) ;
+  dock -> setAllowedAreas       ( Qt::TopDockWidgetArea      |
+                                  Qt::BottomDockWidgetArea ) ;
+  dock -> setWindowTitle        ( tr("Commands")           ) ;
+  addDockWidget                 ( Qt::BottomDockWidgetArea   ,
+                                  dock                       ,
+                                  Qt::Vertical             ) ;
+  ////////////////////////////////////////////////////////////
+  sa    = new QScrollArea       (                          ) ;
+  dock -> setWidget             ( sa                       ) ;
+  cli   = new InteractiveEditor ( sa                       ) ;
 }
 
 void ICPT::ShowMonitors(void)

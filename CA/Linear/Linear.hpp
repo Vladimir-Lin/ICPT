@@ -175,7 +175,7 @@ class Tensor4x4
 
   protected:
 
-    double T [ 16 ] ;
+    double T [ 256 ] ;
 
   private:
 
