@@ -41,7 +41,7 @@ class Vector3 : public Vector
 
     explicit     Vector3     (void) ;
     explicit     Vector3     (double * address) ;
-                 Vector3     (Vector3 & v) ;
+                 Vector3     (const Vector3 & v) ;
                  Vector3     (double a,double b,double c) ;
     virtual     ~Vector3     (void) ;
 
@@ -51,7 +51,7 @@ class Vector3 : public Vector
 
     virtual void setValues   (double a,double b,double c) ;
 
-    Vector3 &    operator  = (Vector3 & v) ;
+    Vector3 &    operator  = (const Vector3 & v) ;
 
     Vector3 &    operator /= (double v) ;
     Vector3 &    operator *= (double v) ;
@@ -86,8 +86,8 @@ class Vector4 : public Vector
 
     explicit     Vector4     (void) ;
     explicit     Vector4     (double * address) ;
-                 Vector4     (Vector3 & v) ;
-                 Vector4     (Vector4 & v) ;
+                 Vector4     (      Vector3 & v) ;
+                 Vector4     (const Vector4 & v) ;
                  Vector4     (double a,double b,double c,double d = 0) ;
     virtual     ~Vector4     (void) ;
 
@@ -97,7 +97,7 @@ class Vector4 : public Vector
 
     virtual void setValues   (double a,double b,double c,double d) ;
 
-    Vector4 &    operator  = (Vector4 & v) ;
+    Vector4 &    operator  = (const Vector4 & v) ;
 
     Vector4 &    operator /= (double v) ;
     Vector4 &    operator *= (double v) ;

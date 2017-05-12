@@ -23,8 +23,8 @@ CA::Vector4:: Vector4 ( Vector3 & v )
   V [ 3 ] =     0          ;
 }
 
-CA::Vector4:: Vector4 ( Vector4 & v )
-            : Vector  ( 4           )
+CA::Vector4:: Vector4 ( const Vector4 & v )
+            : Vector  ( 4                 )
 {
   V [ 0 ] = v . V [ 0 ] ;
   V [ 1 ] = v . V [ 1 ] ;
@@ -66,7 +66,7 @@ void CA::Vector4::setValues(double a,double b,double c,double d)
   V [ 3 ] = d ;
 }
 
-CA::Vector4 & CA::Vector4::operator = (Vector4 & v)
+CA::Vector4 & CA::Vector4::operator = (const Vector4 & v)
 {
   V [ 0 ] = v . V [ 0 ] ;
   V [ 1 ] = v . V [ 1 ] ;

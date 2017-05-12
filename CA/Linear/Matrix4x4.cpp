@@ -100,9 +100,9 @@ CA::Matrix4x4 & CA::Matrix4x4::rotate(Vector4 & v)
   double   xy   = x * y                                                      ;
   double   xz   = x * z                                                      ;
   double   yz   = y * z                                                      ;
-  double   sw   = FastCos ( w )                                              ;
+  double   sw   = FastSin ( w )                                              ;
   double   cw   = FastCos ( w )                                              ;
-  double   mc   = 1 - cw     /* 1 - cos ( w ) */                             ;
+  double   mc   = 1  - cw    /* 1 - cos ( w ) */                             ;
   double   swx  = sw * x     /* sin ( w ) * x */                             ;
   double   swy  = sw * y     /* sin ( w ) * y */                             ;
   double   swz  = sw * z     /* sin ( w ) * z */                             ;

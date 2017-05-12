@@ -149,7 +149,7 @@ void CA::Light::AssignPosition(void)
 
 void CA::Light::AssignColors(void)
 {
-  if ( Index < 0        ) return               ;
+  if ( Index < 0      ) return                 ;
   int index = LightIndex ( )                   ;
   if ( Booleans [ 1 ] )                        {
     Lightfv ( index , GL_AMBIENT  , Ambient  ) ;

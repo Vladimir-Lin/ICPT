@@ -12,8 +12,8 @@ CA::Vector3:: Vector3 ( double * address )
 {
 }
 
-CA::Vector3:: Vector3 ( Vector3 & v )
-            : Vector  ( 3           )
+CA::Vector3:: Vector3 ( const Vector3 & v )
+            : Vector  ( 3                 )
 {
   V [ 0 ] = v . V [ 0 ] ;
   V [ 1 ] = v . V [ 1 ] ;
@@ -51,7 +51,7 @@ void CA::Vector3::setValues(double a,double b,double c)
   V [ 2 ] = c ;
 }
 
-CA::Vector3 & CA::Vector3::operator = (Vector3 & v)
+CA::Vector3 & CA::Vector3::operator = (const Vector3 & v)
 {
   V [ 0 ] = v . V [ 0 ] ;
   V [ 1 ] = v . V [ 1 ] ;

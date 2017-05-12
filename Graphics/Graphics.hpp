@@ -266,6 +266,83 @@ class Camera
 
 } ;
 
+class Position
+{
+  public:
+
+    Vector4 T ;
+    Vector4 R ;
+    Vector4 A ;
+    Vector4 S ;
+
+    explicit Position (void) ;
+    virtual ~Position (void) ;
+
+    void     Push     (void) ;
+    void     Pop      (void) ;
+
+  protected:
+
+  private:
+
+} ;
+
+class Texture
+{
+  public:
+
+    explicit Texture      (void) ;
+    virtual ~Texture      (void) ;
+
+    bool     loadResource (QString resource) ;
+    bool     Bind         (void) ;
+    bool     Release      (void) ;
+    void     Render       (void) ;
+
+  protected:
+
+    GLuint   TID      ;
+    QImage * Image    ;
+    QSize    Original ;
+    QSize    Size     ;
+
+    bool     bindError    (void) ;
+    bool     BindTexture  (QImage * image,GLuint & id) ;
+
+  private:
+
+    int      MipSize      (int size) ;
+    QSize    MipSize      (QSize & size) ;
+
+} ;
+
+class Ball : public Ellipsoid
+{
+  public:
+
+    explicit Ball           (void) ;
+    virtual ~Ball           (void) ;
+
+    bool     loadTexture    (QString res) ;
+
+    void     DrawLongtitude (int x,int y) ;
+    void     DrawLatitude   (int x,int y) ;
+    void     DrawWire       (int x,int y) ;
+
+    void     Render         (void) ;
+    void     Surface        (void) ;
+
+  protected:
+
+    Vector4   radius  ;
+    Texture * texture ;
+
+    void     PushPoints     (int n,int gaps,double * points) ;
+
+  private:
+
+} ;
+
 }
 
 #endif // OBJECTS_HPP

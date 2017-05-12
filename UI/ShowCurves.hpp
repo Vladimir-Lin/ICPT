@@ -165,6 +165,8 @@ class InteractiveEditor : public QWidget
     virtual void GoUp                 (void) ;
     virtual void GoDown               (void) ;
 
+    virtual void Parse                (QString command) ;
+
   private slots:
 
     void         updateCursor         (void) ;
@@ -172,7 +174,30 @@ class InteractiveEditor : public QWidget
   signals:
 
     void         EmitUpdate           (void) ;
-    void         LineInput            (void) ;
+
+} ;
+
+class GalleryView : public QListWidget
+{
+  Q_OBJECT
+  public:
+
+    explicit      GalleryView (QWidget * parent = NULL) ;
+    virtual      ~GalleryView (void) ;
+
+    virtual QSize sizeHint    (void) const ;
+
+  protected:
+
+  private:
+
+  public slots:
+
+  protected slots:
+
+  private slots:
+
+  signals:
 
 } ;
 
@@ -223,8 +248,8 @@ class ShowCurves : public    QOpenGLWidget
 } ;
 
 class StarView : public    QOpenGLWidget
-               , protected QOpenGLFunctions
                , public    CA::Thread
+               , protected QOpenGLFunctions
 {
   Q_OBJECT
   public:
@@ -236,9 +261,26 @@ class StarView : public    QOpenGLWidget
 
   protected:
 
-    QTimer        TTT    ;
-    CA::Vector4   V4     ;
-    CA::Camera    camera ;
+    QTimer             TTT         ;
+    CA::Vector4        V4          ;
+    CA::Lights         lights      ;
+    CA::Material       material    ;
+    CA::Camera         camera      ;
+    CA::Ball           Earth       ;
+    CA::Position       Epp         ;
+    CA::Ball           Moon        ;
+    CA::Position       Mpp         ;
+    CA::Ball           Sun         ;
+    CA::Position       Spp         ;
+    int                interval    ;
+    bool               ggg         ;
+    bool               rendering   ;
+    double             cameraAngle ;
+    double             zAngle      ;
+    double           * esOrbit     ;
+    double           * emOrbit     ;
+    QList<CA::Vector4> EarthTail   ;
+    QList<CA::Vector4> MoonTail    ;
 
     void          initializeGL          (void) ;
     void          paintGL               (void) ;
@@ -249,11 +291,16 @@ class StarView : public    QOpenGLWidget
     virtual void  mouseDoubleClickEvent (QMouseEvent * e) ;
     virtual void  mouseMoveEvent        (QMouseEvent * e) ;
 
+    virtual void  run                   (int Type,CA::ThreadData * Data) ;
+
+    void          SolarSystem           (void) ;
+
   private:
 
     bool          bindError             (void) ;
-    bool          BindTexture           (QImage * image,GLuint & id) ;
     void          PushPoints            (int n,int gaps,double * points) ;
+
+    void          DrawTail              (CA::Vector4 Color,QList<CA::Vector4> & P) ;
 
   public slots:
 

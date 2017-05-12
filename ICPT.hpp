@@ -34,11 +34,12 @@ class ICPT : public QMainWindow
 
   protected:
 
-    Ui::ICPT          * ui     ;
-    QMdiArea          * mdi    ;
-    QDockWidget       * dock   ;
-    InteractiveEditor * cli    ;
-    ShowCurves        * curves ;
+    Ui::ICPT          * ui      ;
+    QMdiArea          * mdi     ;
+    QDockWidget       * dock    ;
+    InteractiveEditor * cli     ;
+    GalleryView       * gallery ;
+    ShowCurves        * curves  ;
 
     void         Parse         (int argc,char ** argv) ;
 
@@ -55,6 +56,11 @@ class ICPT : public QMainWindow
     virtual void Scenes        (void) ;
     virtual void StopScenes    (void) ;
 
+    virtual void NewWorld      (void) ;
+    virtual void FullWorld     (void) ;
+
+    virtual void Gallery       (bool enabled) ;
+
   protected slots:
 
     virtual void Start         (void) ;
@@ -62,6 +68,7 @@ class ICPT : public QMainWindow
   private slots:
 
     void         ShowMonitors  (void) ;
+    void         ShowWindows   (void) ;
 
   signals:
 

@@ -4,5 +4,7 @@
         <file>icons/sun.png</file>
         <file>icons/Stop.png</file>
         <file>icons/start.png</file>
+        <file>images/earth.jpg</file>
+        <file>images/moon.jpg</file>
     </qresource>
 </RCC>

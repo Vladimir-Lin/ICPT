@@ -525,11 +525,12 @@ void InteractiveEditor::setPrompt(QString prompt)
 void InteractiveEditor::Enter(void)
 {
   if ( Commands . length ( ) <= 0 ) return ;
+  QString c = Commands                     ;
   Report ( Commands )                      ;
   Report ( "\n"     )                      ;
   Queues  << Commands                      ;
   Commands = ""                            ;
-  emit LineInput ( )                       ;
+  Parse ( c )                              ;
 }
 
 void InteractiveEditor::Enter(QString command)
@@ -538,7 +539,7 @@ void InteractiveEditor::Enter(QString command)
   Report         ( command )              ;
   Report         ( "\n"    )              ;
   Queues  << command                      ;
-  emit LineInput (         )              ;
+  Parse          ( command )              ;
 }
 
 void InteractiveEditor::BrowseFiles(void)
@@ -628,4 +629,8 @@ QStringList InteractiveEditor::PurifyLines(QStringList lines)
     s << l                          ;
   }                                 ;
   return s                          ;
+}
+
+void InteractiveEditor::Parse(QString command)
+{
 }

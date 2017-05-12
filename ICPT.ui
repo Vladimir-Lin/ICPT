@@ -81,11 +81,15 @@
     </property>
     <addaction name="actionScenes"/>
     <addaction name="actionStop"/>
+    <addaction name="separator"/>
+    <addaction name="actionGallery"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionNewWorld"/>
+    <addaction name="actionFullWorld"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -142,6 +146,24 @@
     <string>Stop</string>
    </property>
   </action>
+  <action name="actionGallery">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Gallery</string>
+   </property>
+  </action>
+  <action name="actionNewWorld">
+   <property name="text">
+    <string>New world</string>
+   </property>
+  </action>
+  <action name="actionFullWorld">
+   <property name="text">
+    <string>Full world</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -185,6 +207,54 @@
    <signal>triggered()</signal>
    <receiver>ICPT</receiver>
    <slot>StopScenes()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionGallery</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>ICPT</receiver>
+   <slot>Gallery(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNewWorld</sender>
+   <signal>triggered()</signal>
+   <receiver>ICPT</receiver>
+   <slot>NewWorld()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFullWorld</sender>
+   <signal>triggered()</signal>
+   <receiver>ICPT</receiver>
+   <slot>FullWorld()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

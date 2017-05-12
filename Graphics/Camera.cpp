@@ -70,7 +70,7 @@ void CA::Camera::Projection(double FOV,double W,double H,double N,double F)
 
 void CA::Camera::Projection(double FOV,double W,double H)
 {
-  Projection ( FOV , W , H , 1.0 , 10000000000000000000.0 ) ;
+  Projection ( FOV , W , H , 1.0 , 1000000000000000000000000000000000000000000.0 ) ;
 }
 
 void CA::Camera::Projection(double FOV)

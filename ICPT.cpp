@@ -21,10 +21,11 @@ ICPT:: ICPT          ( int argc , char ** argv , QWidget * parent )
      , CA::Thread    (                                            )
      , ui            ( new Ui::ICPT                               )
 {
-  Parse            ( argc , argv ) ;
-  ui    -> setupUi ( this        ) ;
-  mdi    = ui -> Center            ;
-  curves = NULL                    ;
+  Parse             ( argc , argv ) ;
+  ui     -> setupUi ( this        ) ;
+  mdi     = ui -> Center            ;
+  gallery = NULL                    ;
+  curves  = NULL                    ;
 }
 
 ICPT::~ICPT(void)
@@ -50,16 +51,19 @@ void ICPT::Quit(void)
 
 bool ICPT::Prepare(void)
 {
-  /////////////////////////////////////////////////////////////////////
-  QObject::connect ( this , SIGNAL ( EmitStart ( ) )                  ,
-                     this , SLOT   ( Start     ( ) )                ) ;
-  /////////////////////////////////////////////////////////////////////
-  QObject::connect ( ui->menuMonitors , SIGNAL ( aboutToShow  ( ) )   ,
-                     this             , SLOT   ( ShowMonitors ( ) ) ) ;
-  /////////////////////////////////////////////////////////////////////
-  emit EmitStart ( )                                                  ;
-  /////////////////////////////////////////////////////////////////////
-  return true                                                         ;
+  ///////////////////////////////////////////////////////////////////////
+  QObject::connect ( this , SIGNAL ( EmitStart ( ) )                    ,
+                     this , SLOT   ( Start     ( ) )                  ) ;
+  ///////////////////////////////////////////////////////////////////////
+  QObject::connect ( ui -> menuMonitors , SIGNAL ( aboutToShow  ( ) )   ,
+                     this               , SLOT   ( ShowMonitors ( ) ) ) ;
+  ///////////////////////////////////////////////////////////////////////
+  QObject::connect ( ui -> menuWindows  , SIGNAL ( aboutToShow  ( ) )   ,
+                     this               , SLOT   ( ShowWindows  ( ) ) ) ;
+  ///////////////////////////////////////////////////////////////////////
+  emit EmitStart ( )                                                    ;
+  ///////////////////////////////////////////////////////////////////////
+  return true                                                           ;
 }
 
 void ICPT::Start(void)
@@ -81,6 +85,7 @@ void ICPT::CreateInterpreter(void)
                                   Qt::Vertical             ) ;
   ////////////////////////////////////////////////////////////
   sa    = new QScrollArea       (                          ) ;
+  sa   -> setMinimumHeight      ( 120                      ) ;
   dock -> setWidget             ( sa                       ) ;
   cli   = new InteractiveEditor ( sa                       ) ;
 }
@@ -109,6 +114,25 @@ void ICPT::ShowMonitors(void)
   }                                                              ;
 }
 
+void ICPT::ShowWindows(void)
+{
+  QMenu               *  mm   = ui  -> menuWindows       ;
+  QList<QMdiSubWindow *> LMSW = mdi -> subWindowList ( ) ;
+  int                    sc   = LMSW . count         ( ) ;
+  QString                ss                              ;
+  QAction             *  aa                              ;
+  ////////////////////////////////////////////////////////
+  mm -> clear ( )                                        ;
+  ////////////////////////////////////////////////////////
+  for ( int i = 0 ; i < sc ; i++ )                       {
+    ss  = LMSW [ i ] -> windowTitle ( )                  ;
+    aa  = new QAction (                                ) ;
+    aa -> setText     ( ss                             ) ;
+    aa -> setIcon     ( LMSW [ i ] -> windowIcon ( )   ) ;
+    mm -> addAction   ( aa                             ) ;
+  }                                                      ;
+}
+
 void ICPT::Play(void)
 {
 }
@@ -126,4 +150,38 @@ void ICPT::StopScenes(void)
 {
   if ( NULL == curves ) return ;
   curves -> StopTime ( )       ;
+}
+
+void ICPT::Gallery(bool enabled)
+{
+  if                                     ( enabled         ) {
+    if                                   ( NULL == gallery ) {
+      gallery = new GalleryView          ( NULL            ) ;
+      mdi    -> addSubWindow             ( gallery         ) ;
+    }                                                        ;
+    gallery  -> parentWidget ( ) -> show (                 ) ;
+  } else                                                     {
+    gallery  -> parentWidget ( ) -> hide (                 ) ;
+  }                                                          ;
+}
+
+void ICPT::NewWorld(void)
+{
+  StarView * sv                         ;
+  sv   = new StarView   ( NULL        ) ;
+  mdi -> addSubWindow   ( sv          ) ;
+  sv  -> show           (             ) ;
+  sv  -> setWindowTitle ( "Star View" ) ;
+  sv  -> StartTime      (             ) ;
+  sv  -> start          ( 10001       ) ;
+}
+
+void ICPT::FullWorld(void)
+{
+  StarView * sv                         ;
+  sv   = new StarView   ( NULL        ) ;
+  sv  -> setWindowTitle ( "Star View" ) ;
+  sv  -> showFullScreen (             ) ;
+  sv  -> StartTime      (             ) ;
+  sv  -> start          ( 10001       ) ;
 }
