@@ -173,7 +173,7 @@ void ICPT::NewWorld(void)
   sv  -> show           (             ) ;
   sv  -> setWindowTitle ( "Star View" ) ;
   sv  -> StartTime      (             ) ;
-  sv  -> start          ( 10001       ) ;
+  sv  -> start          ( 10003       ) ;
 }
 
 void ICPT::FullWorld(void)
@@ -183,5 +183,5 @@ void ICPT::FullWorld(void)
   sv  -> setWindowTitle ( "Star View" ) ;
   sv  -> showFullScreen (             ) ;
   sv  -> StartTime      (             ) ;
-  sv  -> start          ( 10001       ) ;
+  sv  -> start          ( 10003       ) ;
 }

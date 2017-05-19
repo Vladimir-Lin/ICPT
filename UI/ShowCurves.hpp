@@ -272,9 +272,14 @@ class StarView : public    QOpenGLWidget
     CA::Position       Mpp         ;
     CA::Ball           Sun         ;
     CA::Position       Spp         ;
+    CA::Texture        Hoag        ;
+    CA::Position       HoagPP      ;
+    CA::Texture        Milky       ;
+    CA::Position       MilkyPP     ;
     int                interval    ;
     bool               ggg         ;
     bool               rendering   ;
+    bool               showup      ;
     double             cameraAngle ;
     double             zAngle      ;
     double           * esOrbit     ;
@@ -294,8 +299,24 @@ class StarView : public    QOpenGLWidget
     virtual void  run                   (int Type,CA::ThreadData * Data) ;
 
     void          SolarSystem           (void) ;
+    void          HoagObject            (void) ;
+    void          HoagCompare           (void) ;
 
   private:
+
+    void          BuildAll              (void) ;
+
+    void          BuildEarth            (void) ;
+    void          DeleteEarth           (void) ;
+    void          DrawEarthOrbit        (void) ;
+
+    void          BuildHoag             (void) ;
+    void          DeleteHoag            (void) ;
+    void          DrawHoag              (void) ;
+
+    void          BuildMilky            (void) ;
+    void          DeleteMilky           (void) ;
+    void          DrawMilky             (void) ;
 
     bool          bindError             (void) ;
     void          PushPoints            (int n,int gaps,double * points) ;

@@ -5,6 +5,34 @@ StarView:: StarView         ( QWidget * parent )
          , CA::Thread       (                  )
          , QOpenGLFunctions (                  )
 {
+//  BuildAll ( ) ;
+//  BuildHoag ( );
+  BuildMilky ( ) ;
+}
+
+StarView::~StarView(void)
+{
+//  DeleteEarth ( ) ;
+//  DeleteHoag  ( ) ;
+  DeleteMilky ( ) ;
+  TTT . stop  ( ) ;
+  makeCurrent ( ) ;
+  doneCurrent ( ) ;
+}
+
+void StarView::DeleteEarth(void)
+{
+  delete [ ] esOrbit ;
+  ggg = false        ;
+}
+
+void StarView::BuildAll(void)
+{
+  BuildEarth ( ) ;
+}
+
+void StarView::BuildEarth(void)
+{
   CA::Light * l = new CA::Light ( )                                          ;
   double      FFF =     15.0                                                 ;
   double      Efp = 152100.0000                                              ;
@@ -151,15 +179,6 @@ StarView:: StarView         ( QWidget * parent )
   zAngle      = 0                                                            ;
 }
 
-StarView::~StarView(void)
-{
-  delete [ ] esOrbit ;
-  ggg = false        ;
-  TTT . stop  ( )    ;
-  makeCurrent ( )    ;
-  doneCurrent ( )    ;
-}
-
 QSize StarView::sizeHint(void) const
 {
   return QSize ( 640 , 480 ) ;
@@ -213,6 +232,13 @@ void StarView::initializeGL(void)
 }
 
 void StarView::paintGL(void)
+{
+//  DrawEarthOrbit ( ) ;
+//  DrawHoag       ( ) ;
+  DrawMilky      ( ) ;
+}
+
+void StarView::DrawEarthOrbit(void)
 {
   rendering = true                                                      ;
   ///////////////////////////////////////////////////////////////////////
@@ -357,6 +383,12 @@ void StarView::run(int T,CA::ThreadData * D)
   switch ( T )        {
     case 10001        :
       SolarSystem ( ) ;
+    break             ;
+    case 10002        :
+      HoagObject  ( ) ;
+    break             ;
+    case 10003        :
+      HoagCompare ( ) ;
     break             ;
   }                   ;
 }
@@ -545,5 +577,414 @@ void StarView::SolarSystem(void)
     B   = D + A                                                              ;
     //////////////////////////////////////////////////////////////////////////
     camera . Look ( C  , B , U )                                             ;
+  }                                                                          ;
+}
+
+void StarView::BuildHoag(void)
+{
+  int         n   =    720                                                   ;
+  int         m   =    180                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Light * l = new CA::Light ( )                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Vector4 AT ( 0.0 , 0.0 , 0.0 , 0.0 )                                   ;
+  CA::Vector4 UP ( 0.0 , 1.0 , 0.0 , 0.0 )                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  QObject::connect       ( &TTT , SIGNAL ( timeout   ( ) )                   ,
+                           this , SLOT   ( Intervals ( ) )                 ) ;
+  V4     . setValues     ( 0.0 , 0.0 , -200000.0 , 0.0                     ) ;
+  camera . Look          ( V4 , AT , UP                                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  Hoag   . loadResource  ( ":/images/PGC-54559.jpg"                        ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  Sun    . setRadius     ( 8500 , 8500 , 8500                              ) ;
+  Sun    . setSegments   ( n  , m                                          ) ;
+  Sun    . Generate      (                                                 ) ;
+  Spp    . T . setValues (   0.0 ,   0.0 ,   0.0 , 0.00                    ) ;
+  Spp    . A . setValues (   0.0 ,   1.0 ,   0.0 , 7.25                    ) ;
+  Spp    . R . setValues (   0.0 ,   0.0 ,   1.0 , 0.00                    ) ;
+  Spp    . S . setValues (  12.0 ,  12.0 ,  12.0 , 1.00                    ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  rendering   = false                                                        ;
+  interval    = 75                                                           ;
+}
+
+void StarView::DeleteHoag(void)
+{
+  ggg = false        ;
+}
+
+void StarView::DrawHoag(void)
+{
+  rendering = true                                                      ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glEnable          ( GL_DEPTH_TEST                                 ) ;
+//  ::glDisable         ( GL_DEPTH_TEST                                 ) ;
+//  ::glDepthFunc       ( GL_NEVER                                      ) ;
+  ::glDepthFunc       ( GL_LESS                                       ) ;
+//  ::glDepthFunc       ( GL_EQUAL                                      ) ;
+//  ::glDepthFunc       ( GL_LEQUAL                                     ) ;
+//  ::glDepthFunc       ( GL_GREATER                                    ) ;
+//  ::glDepthFunc       ( GL_NOTEQUAL                                   ) ;
+//  ::glDepthFunc       ( GL_GEQUAL                                     ) ;
+//  ::glDepthFunc       ( GL_ALWAYS                                     ) ;
+//  ::glEnable          ( GL_CULL_FACE                                  ) ;
+  ::glDisable         ( GL_CULL_FACE                                  ) ;
+  ::glCullFace        ( GL_BACK                                       ) ;
+//  ::glCullFace        ( GL_FRONT                                      ) ;
+//  ::glCullFace        ( GL_FRONT_AND_BACK                             ) ;
+  ::glEnable          ( GL_BLEND                                      ) ;
+  ::glBlendFunc       ( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA         ) ;
+  ::glEnable          ( GL_COLOR_MATERIAL                             ) ;
+//  ::glColorMaterial   ( GL_FRONT_AND_BACK , GL_AMBIENT_AND_DIFFUSE    ) ;
+  ::glShadeModel      ( GL_SMOOTH                                     ) ;
+  ::glEnable          ( GL_LINE_SMOOTH                                ) ;
+  ::glHint            ( GL_LINE_SMOOTH_HINT , GL_NICEST               ) ;
+//  ::glClearColor      ( 1.0 , 1.0 , 1.0 , 1.0                         ) ;
+  ::glClearColor      ( 0.0 , 0.0 , 0.0 , 0.0                         ) ;
+//  ::glClearColor      ( 0.0f , 0.204f , 0.400f , 1.0f                 ) ;
+  ::glClear           ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT     ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glMatrixMode      ( GL_TEXTURE                                    ) ;
+  ::glLoadIdentity    (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  camera . setRegion  ( 0 , 0 , width ( ) , height ( )                ) ;
+  camera . Projection ( 45                                            ) ;
+  camera . Push       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+//  material . Execute  (                                               ) ;
+//  lights   . Execute  (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glPushMatrix      (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  int x =   180                                                         ;
+  int y =   -40                                                         ;
+  int w = 80000                                                         ;
+  int h = 80000                                                         ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glColor4d         ( 1.00 , 1.00 , 1.00 , 1.00                     ) ;
+  ::glEnable          ( GL_TEXTURE_2D                                 ) ;
+  Hoag . Bind         (                                               ) ;
+  ::glBegin           ( GL_QUADS                                      ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glTexCoord2d      ( 1.0 , 1.0                                     ) ;
+  ::glVertex3d        ( - w + x , - h + y , 0.0                       ) ;
+  ::glTexCoord2d      ( 0.0 , 1.0                                     ) ;
+  ::glVertex3d        (   w + x , - h + y , 0.0                       ) ;
+  ::glTexCoord2d      ( 0.0 , 0.0                                     ) ;
+  ::glVertex3d        (   w + x ,   h + y , 0.0                       ) ;
+  ::glTexCoord2d      ( 1.0 , 0.0                                     ) ;
+  ::glVertex3d        ( - w + x ,   h + y , 0.0                       ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glEnd             (                                               ) ;
+  Hoag . Release      (                                               ) ;
+  ::glDisable         ( GL_TEXTURE_2D                                 ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glLineWidth       ( 1.25                                          ) ;
+  ::glColor4d         ( 0.75 , 0.75 , 0.0 , 1.0                       ) ;
+  Sun   . DrawWire    ( 24 , 12                                       ) ;
+  ///////////////////////////////////////////////////////////////////////
+  int R1 = 37500                                                        ;
+  int R2 = 60000                                                        ;
+  ::glColor4d         ( 1.00 , 1.00 , 1.00 , 1.00                     ) ;
+  ::glLineWidth       ( 2.50                                          ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_LINE_LOOP                                  ) ;
+  for ( int i = 0 ; i < 3600 ; i++ )                                    {
+    double a = i  * M_PI / 1800                                         ;
+    double x = R1 * cos ( a )                                           ;
+    double y = R1 * sin ( a )                                           ;
+    ::glVertex3d ( x , y , -3000 )                                      ;
+  }                                                                     ;
+  ::glEnd             (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_LINE_LOOP                                  ) ;
+  for ( int i = 0 ; i < 3600 ; i++ )                                    {
+    double a = i  * M_PI / 1800                                         ;
+    double x = R1 * cos ( a )                                           ;
+    double y = R1 * sin ( a )                                           ;
+    ::glVertex3d ( x , y ,  3000 )                                      ;
+  }                                                                     ;
+  ::glEnd             (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_LINE_LOOP                                  ) ;
+  for ( int i = 0 ; i < 3600 ; i++ )                                    {
+    double a = i  * M_PI / 1800                                         ;
+    double x = R2 * cos ( a )                                           ;
+    double y = R2 * sin ( a )                                           ;
+    ::glVertex3d ( x , y , -3000 )                                      ;
+  }                                                                     ;
+  ::glEnd             (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_LINE_LOOP                                  ) ;
+  for ( int i = 0 ; i < 3600 ; i++ )                                    {
+    double a = i  * M_PI / 1800                                         ;
+    double x = R2 * cos ( a )                                           ;
+    double y = R2 * sin ( a )                                           ;
+    ::glVertex3d ( x , y ,  3000 )                                      ;
+  }                                                                     ;
+  ::glEnd             (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_LINES                                      ) ;
+  for ( int i = 0 ; i < 24 ; i++ )                                      {
+    double a  = i  * M_PI / 12                                          ;
+    double x1 = R1 * cos ( a )                                          ;
+    double y1 = R1 * sin ( a )                                          ;
+    double x2 = R2 * cos ( a )                                          ;
+    double y2 = R2 * sin ( a )                                          ;
+    ::glVertex3d ( x1 , y1 , -3000 )                                    ;
+    ::glVertex3d ( x2 , y2 , -3000 )                                    ;
+    ::glVertex3d ( x1 , y1 ,  3000 )                                    ;
+    ::glVertex3d ( x2 , y2 ,  3000 )                                    ;
+    ::glVertex3d ( x1 , y1 , -3000 )                                    ;
+    ::glVertex3d ( x1 , y1 ,  3000 )                                    ;
+    ::glVertex3d ( x2 , y2 , -3000 )                                    ;
+    ::glVertex3d ( x2 , y2 ,  3000 )                                    ;
+  }                                                                     ;
+  ::glEnd             (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glPopMatrix       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  camera . Pop        (                                               ) ;
+//  lights . Disable    (                                               ) ;
+  ::glFlush           (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  rendering = false                                                     ;
+}
+
+void StarView::HoagObject(void)
+{
+  QDateTime T                                                                ;
+  QDateTime E                                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Vector4   A                                                            ;
+  CA::Vector4   B ( 0.0 , 0.0 , 0.0 , 0.0 )                                  ;
+  CA::Vector4   U ( 0.0 , 1.0 , 0.0 , 0.0 )                                  ;
+  double        R = 200000                                                   ;
+  double        X = 0                                                        ;
+  double        a                                                            ;
+  ////////////////////////////////////////////////////////////////////////////
+  E   = QDateTime::currentDateTime ( )                                       ;
+  ggg = true                                                                 ;
+  while ( ggg && ( E . msecsTo ( QDateTime::currentDateTime() ) < 5000 ) )   {
+    ::Sleep ( 1 )                                                            ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  while ( ggg )                                                              {
+    ::Sleep ( 1 )                                                            ;
+    if ( rendering                    ) continue                             ;
+    T = QDateTime::currentDateTime ( )                                       ;
+    if ( E . msecsTo ( T ) < interval ) continue                             ;
+    E = T                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    X += 1                                                                   ;
+    a  = M_PI * X / 180                                                      ;
+    A . setValues ( 0.0 , - R * sin ( a ) , - R * cos ( a ) , 1.0 )          ;
+    //////////////////////////////////////////////////////////////////////////
+    camera . Look ( A  , B , U )                                             ;
+  }                                                                          ;
+}
+
+void StarView::BuildMilky(void)
+{
+  int         n   =    720                                                   ;
+  int         m   =    180                                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Light * l = new CA::Light ( )                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Vector4 AT ( 0.0 , 0.0 , 0.0 , 0.0 )                                   ;
+  CA::Vector4 UP ( 0.0 , 1.0 , 0.0 , 0.0 )                                   ;
+  ////////////////////////////////////////////////////////////////////////////
+  QObject::connect        ( &TTT , SIGNAL ( timeout   ( ) )                  ,
+                            this , SLOT   ( Intervals ( ) )                ) ;
+  V4      . setValues     ( 0.0 , 0.0 , -240000.0 , 0.0                    ) ;
+  camera  . Look          ( V4 , AT , UP                                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  Hoag    . loadResource  ( ":/images/PGC-54559.jpg"                       ) ;
+  Milky   . loadResource  ( ":/images/milky-way.jpg"                       ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  HoagPP  . T . setValues ( -100000.0 , 0.0 , 0.0 , 1.00                   ) ;
+  HoagPP  . A . setValues (       0.0 , 1.0 , 0.0 , 0.00                   ) ;
+  HoagPP  . R . setValues (       0.0 , 0.0 , 1.0 , 0.00                   ) ;
+  HoagPP  . S . setValues (       1.0 , 1.0 , 1.0 , 1.00                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  MilkyPP . T . setValues (  100000.0 , 0.0 , 0.0 , 1.00                   ) ;
+  MilkyPP . A . setValues (       0.0 , 1.0 , 0.0 , 0.00                   ) ;
+  MilkyPP . R . setValues (       0.0 , 0.0 , 1.0 , 0.00                   ) ;
+  MilkyPP . S . setValues (       1.0 , 1.0 , 1.0 , 1.00                   ) ;
+  ////////////////////////////////////////////////////////////////////////////
+  showup      = false                                                        ;
+  rendering   = false                                                        ;
+  interval    = 75                                                           ;
+}
+
+void StarView::DeleteMilky(void)
+{
+  ggg = false ;
+}
+
+void StarView::DrawMilky(void)
+{
+  int w                                                                 ;
+  int h                                                                 ;
+  ///////////////////////////////////////////////////////////////////////
+  rendering = true                                                      ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glEnable          ( GL_DEPTH_TEST                                 ) ;
+  ::glDepthFunc       ( GL_LESS                                       ) ;
+  ::glDisable         ( GL_CULL_FACE                                  ) ;
+  ::glCullFace        ( GL_BACK                                       ) ;
+  ::glEnable          ( GL_BLEND                                      ) ;
+  ::glBlendFunc       ( GL_SRC_ALPHA , GL_ONE_MINUS_SRC_ALPHA         ) ;
+  ::glEnable          ( GL_COLOR_MATERIAL                             ) ;
+  ::glShadeModel      ( GL_SMOOTH                                     ) ;
+  ::glEnable          ( GL_LINE_SMOOTH                                ) ;
+  ::glHint            ( GL_LINE_SMOOTH_HINT , GL_NICEST               ) ;
+  ::glClearColor      ( 0.0 , 0.0 , 0.0 , 0.0                         ) ;
+  ::glClear           ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT     ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glMatrixMode      ( GL_TEXTURE                                    ) ;
+  ::glLoadIdentity    (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  camera . setRegion  ( 0 , 0 , width ( ) , height ( )                ) ;
+  camera . Projection ( 45                                            ) ;
+  camera . Push       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glPushMatrix      (                                               ) ;
+  ::glEnable          ( GL_TEXTURE_2D                                 ) ;
+  ///////////////////////////////////////////////////////////////////////
+  w = 80000                                                             ;
+  h = 80000                                                             ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glColor4d         ( 1.00 , 1.00 , 1.00 , 0.60                     ) ;
+  HoagPP . Push       (                                               ) ;
+  Hoag   . Bind       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_QUADS                                      ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glTexCoord2d      ( 0.0 , 1.0                                     ) ;
+  ::glVertex3d        (   w , - h , 0.0                               ) ;
+  ::glTexCoord2d      ( 1.0 , 1.0                                     ) ;
+  ::glVertex3d        ( - w , - h , 0.0                               ) ;
+  ::glTexCoord2d      ( 1.0 , 0.0                                     ) ;
+  ::glVertex3d        ( - w ,   h , 0.0                               ) ;
+  ::glTexCoord2d      ( 0.0 , 0.0                                     ) ;
+  ::glVertex3d        (   w ,   h , 0.0                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glEnd             (                                               ) ;
+  Hoag   . Release    (                                               ) ;
+  HoagPP . Pop        (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  w = 60000                                                             ;
+  h = 60000                                                             ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glColor4d         ( 1.00 , 1.00 , 1.00 , 0.60                     ) ;
+  MilkyPP . Push      (                                               ) ;
+  Milky   . Bind      (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glBegin           ( GL_QUADS                                      ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glTexCoord2d      ( 0.0        , 1.0                              ) ;
+  ::glVertex3d        (   w + 1500 , - h , 0.0                        ) ;
+  ::glTexCoord2d      ( 1.0        , 1.0                              ) ;
+  ::glVertex3d        ( - w + 1500 , - h , 0.0                        ) ;
+  ::glTexCoord2d      ( 1.0        , 0.0                              ) ;
+  ::glVertex3d        ( - w + 1500 ,   h , 0.0                        ) ;
+  ::glTexCoord2d      ( 0.0        , 0.0                              ) ;
+  ::glVertex3d        (   w + 1500 ,   h , 0.0                        ) ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glEnd             (                                               ) ;
+  Milky   . Release   (                                               ) ;
+  MilkyPP . Pop       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  if ( showup )                                                         {
+    double     r                                                        ;
+    double     x                                                        ;
+    double     y                                                        ;
+    double     z                                                        ;
+    double     a                                                        ;
+    /////////////////////////////////////////////////////////////////////
+    ::glLineWidth     ( 2.5                                           ) ;
+    /////////////////////////////////////////////////////////////////////
+    r =  60000                                                          ;
+    z =  10000 - 500                                                    ;
+    /////////////////////////////////////////////////////////////////////
+    ::glColor4d       ( 1.00 , 0.00 , 0.00 , 1.00                     ) ;
+    ::glBegin         ( GL_LINE_LOOP                                  ) ;
+    for ( int i = 0 ; i < 36000 ; i++ )                                 {
+      a = i * M_PI / 18000                                              ;
+      x = r * cos ( a )                                                 ;
+      y = r * sin ( a )                                                 ;
+      ::glVertex3d    ( x , y , z                                     ) ;
+    }                                                                   ;
+    ::glEnd           (                                               ) ;
+    /////////////////////////////////////////////////////////////////////
+    r =  50000                                                          ;
+    z = -10000 - 500                                                    ;
+    /////////////////////////////////////////////////////////////////////
+    ::glColor4d       ( 0.00 , 1.00 , 0.00 , 1.00                     ) ;
+    ::glBegin         ( GL_LINE_LOOP                                  ) ;
+    for ( int i = 0 ; i < 36000 ; i++ )                                 {
+      a = i * M_PI / 18000                                              ;
+      x = r * cos ( a )                                                 ;
+      y = r * sin ( a )                                                 ;
+      ::glVertex3d    ( x , y , z                                     ) ;
+    }                                                                   ;
+    ::glEnd           (                                               ) ;
+    /////////////////////////////////////////////////////////////////////
+  }                                                                     ;
+  ///////////////////////////////////////////////////////////////////////
+  ::glDisable         ( GL_TEXTURE_2D                                 ) ;
+  ::glPopMatrix       (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  camera . Pop        (                                               ) ;
+  ::glFlush           (                                               ) ;
+  ///////////////////////////////////////////////////////////////////////
+  rendering = false                                                     ;
+}
+
+void StarView::HoagCompare(void)
+{
+  QDateTime T                                                                ;
+  QDateTime E                                                                ;
+  ////////////////////////////////////////////////////////////////////////////
+  CA::Vector4   A                                                            ;
+  CA::Vector4   B ( 0.0 , 0.0 , 0.0 , 0.0 )                                  ;
+  CA::Vector4   U ( 0.0 , 1.0 , 0.0 , 0.0 )                                  ;
+  double        Z = 100000                                                   ;
+  double        H =  20000                                                   ;
+  double        R = 240000                                                   ;
+  double        X = 0                                                        ;
+  double        Y = 0                                                        ;
+  double        a                                                            ;
+  double        b                                                            ;
+  double        c                                                            ;
+  ////////////////////////////////////////////////////////////////////////////
+  E   = QDateTime::currentDateTime ( )                                       ;
+  ggg = true                                                                 ;
+  while ( ggg && ( E . msecsTo ( QDateTime::currentDateTime() ) < 15000 ) )  {
+    ::Sleep ( 1 )                                                            ;
+  }                                                                          ;
+  ////////////////////////////////////////////////////////////////////////////
+  while ( ggg )                                                              {
+    ::Sleep ( 1 )                                                            ;
+    if ( rendering                    ) continue                             ;
+    T = QDateTime::currentDateTime ( )                                       ;
+    if ( E . msecsTo ( T ) < interval ) continue                             ;
+    E = T                                                                    ;
+    //////////////////////////////////////////////////////////////////////////
+    if ( Y < 100 ) Y++ ; else showup = true                                  ;
+    b  = 100 - Y                                                             ;
+    b /= 100                                                                 ;
+    c  =       Y                                                             ;
+    c /= 200                                                                 ;
+    HoagPP  . T . setValues ( - Z * b , 0.0 ,   ( H * c ) , 0.0 )            ;
+    MilkyPP . T . setValues (   Z * b , 0.0 , - ( H * c ) , 0.0 )            ;
+    //////////////////////////////////////////////////////////////////////////
+    if ( X < 70 ) X += 1                                                     ;
+    a  = M_PI * X / 180                                                      ;
+    A . setValues ( 0.0 , - R * sin ( a ) , - R * cos ( a ) , 1.0 )          ;
+    //////////////////////////////////////////////////////////////////////////
+    camera . Look ( A  , B , U )                                             ;
   }                                                                          ;
 }

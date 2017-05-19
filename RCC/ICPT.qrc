@@ -6,5 +6,7 @@
         <file>icons/start.png</file>
         <file>images/earth.jpg</file>
         <file>images/moon.jpg</file>
+        <file>images/PGC-54559.jpg</file>
+        <file>images/milky-way.jpg</file>
     </qresource>
 </RCC>
