@@ -146,6 +146,13 @@ void ICPT::Scenes(void)
   curves -> StartTime      (          ) ;
 }
 
+
+void PrintV(CA::Vector4 & v)
+{
+  double * V = v . values ( ) ;
+  printf ( "%g\n%g\n%g\n%g\n" , V[0] , V[1] , V[2] , V[3] ) ;
+}
+
 void ICPT::StopScenes(void)
 {
   if ( NULL == curves ) return ;

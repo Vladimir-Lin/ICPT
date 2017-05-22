@@ -7,7 +7,7 @@ QT          += sql
 QT          += script
 QT          += xml
 
-# CONFIG      += console
+CONFIG      += console
 
 TARGET       = ICPT
 TEMPLATE     = app
